@@ -1,48 +1,68 @@
 'use strict';
 
-const hapi=require('hapi'),
- MYSQL= require('mysql'),
- Joi=require('joi'),
- bcrypt=require('bcrypt');
+const dotenv=require('dotenv').config(),
+  hapi = require('hapi'),
+  mysql = require('mysql'),
+  Joi = require('joi'),
+  bcrypt = require('bcrypt');
 
-const server = new Hapi.Server();
-
-const con=MYSQL.createConnection({
-  host:'localhost',
-  user:'root',
-  password:'admin',
-  database:'work_repo'
-})
-
-server.connection({
-  host:'localhost',
-  port:8000
-})
-
-con.connect();
-server.route({
-  method:GET,
-  path:'helloworld',
-  handler:function(req,res){
-    return reply("hello world");
-  }
+/*create a new server from hapi*/
+const server = new hapi.Server({
+  host: 'localhost',
+  port: process.env.PORT
 });
 
+/*mysql database connection*/
+const con = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DATABASE,
+  multipleStatements: true
+})
+/*database connection establishment*/
+con.connect(function(err) {
+  if (err) {
+    return console.error('error :' + err.message);
+  }
+  let querys = "";
+  /*auto create table and insert statements*/
+  con.query(querys, function(err, results, fields) {
+    if (err) {
+      console.log(err.message);
+    }
+  })
+  con.end(function(err) {
+    if (err)
+      return console.log(err.message);
+  })
+});
+
+/*simple route for hello world */
 server.route({
-  method:GET,
-  path:'',
-  handler:function(req,res){
-    const uid=req.params.uid;
-    con.query('',function(err,results,fields){
-      if(err)throw err;
+  method: 'GET',
+  path: '/helloworld',
+  handler: function(request, reply) {
+    return "hello world";
+  }
+});
+/*service for work category*/
+server.route({
+  method: 'GET',
+  path: '/wcate',
+  handler: function(req, res) {
+    const uid = req.params.uid;
+    con.query('select * from wcat', function(err, results, fields) {
+      if (err) throw err;
       console.log(results);
-      reply(results);
+      res(results);
     })
   }
 });
 
-server.start(err=>{
-  if(err){
+/*start the server*/
+server.start(err => {
+  if (err) {
     throw err;
   }
   console.log("Server running at:", server.info.uri);
