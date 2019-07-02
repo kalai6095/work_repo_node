@@ -4,7 +4,9 @@ const dotenv = require('dotenv').config(),
   hapi = require('hapi'),
   mysql = require('mysql'),
   Joi = require('joi'),
-  bcrypt = require('bcrypt');
+  bcrypt = require('bcrypt'),
+  fs=require('fs');
+  
 
 /*create a new server from hapi*/
 const server = new hapi.Server({
@@ -25,17 +27,25 @@ con.connect(function(err) {
   if (err) {
     return console.error('error :' + err.message);
   }
+  
   let querys = "";
-  /*auto create table and insert statements*/
-  con.query(querys, function(err, results, fields) {
-    if (err) {
-      console.log(err.message);
-    }
-  })
-  con.end(function(err) {
-    if (err)
-      return console.log(err.message);
-  })
+  fs.readFile('./query.sql','utf8',function(err,data){	 
+	  querys=data;
+	  /*auto create table and insert statements*/
+	  con.query(querys, function(er, results, fields) {
+		if (er) {
+		  console.log(er);
+		}
+	  });
+	  con.end(function(err) {
+		if (err)
+		  return console.log(err.message);
+	  })
+  });
+  
+  
+  
+  
 });
 
 /*simple route for hello world */

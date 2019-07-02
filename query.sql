@@ -1,0 +1,7 @@
+create table IF NOT EXISTS  cform (cformid bigint not null auto_increment,cid varchar(255),description varchar(255),eng varchar(255),no_of_commits integer not null,pull_link varchar(255),wcate_wcate_id bigint,primary key (cformid)) engine=MyISAM;
+create table IF NOT EXISTS  fform (fformid bigint not null auto_increment,description varchar(255),eng varchar(255),f_id varchar(255),no_of_commits integer not null,pull_link varchar(255),wcate_wcate_id bigint,primary key (fformid))engine=MyISAM;
+create table IF NOT EXISTS  jform (jformid bigint not null auto_increment,c_id varchar(255),description varchar(255),eng varchar(255),j_is_converted varchar(255),jid varchar(255),wcate_wcate_id bigint,primary key (jformid)) engine=MyISAM;
+create table IF NOT EXISTS wcate (wcate_id bigint not null auto_increment,wcate varchar(255),primary key (wcate_id)) engine=MyISAM;
+alter table cform add constraint FK97fpacpfifxnp0ylm36mjsc3q foreign key (wcate_wcate_id) references wcate (wcate_id);
+alter table fform add constraint FKq1xxh12shodr1xjytpo9d5vih foreign key (wcate_wcate_id) references wcate (wcate_id);
+alter table jform add constraint FKcx386j2il6lbsw3ltfakwgaq8 foreign key (wcate_wcate_id) references wcate (wcate_id);
