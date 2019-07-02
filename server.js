@@ -1,6 +1,6 @@
 'use strict';
 
-const dotenv=require('dotenv').config(),
+const dotenv = require('dotenv').config(),
   hapi = require('hapi'),
   mysql = require('mysql'),
   Joi = require('joi'),
@@ -66,4 +66,4 @@ server.start(err => {
     throw err;
   }
   console.log("Server running at:", server.info.uri);
-})
+});
